@@ -1,0 +1,116 @@
+body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#container {
+    display: flex;
+    gap: 2vh;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin: 8% 2%;
+}
+
+@media all and (orientation:portrait) {
+    #container {
+        flex-direction: column;
+    }
+}
+
+#field {
+    display: grid;
+    gap: 2px;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    grid-auto-flow: column;
+    margin: auto;
+}
+
+.cell {
+    min-width: 6vmin;
+    max-width: 50px;
+    aspect-ratio: 1;
+    background-color: grey;
+    border-width: 2px;
+}
+
+.cell_apple {
+    background-color: red;
+}
+
+.cell_snake {
+    background-color: green;
+}
+
+.score {
+    display: flex;
+    gap: 3vmin;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media all and (orientation:portrait) {
+    .score {
+        flex-direction: row;
+    }
+}
+
+.score__item {
+    margin: 0 auto;
+    font-family: monospace;
+    font-size: 25px;
+}
+
+.score_current {
+    color: green;
+}
+
+.score_current::before {
+    content: 'Очки:';
+}
+
+.score_best {
+    color: red;
+}
+
+.score_best::before {
+    content: 'Рекорд:';
+}
+
+.controls {
+    display: grid;
+    gap: 2px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas: 
+        ". u ."
+        "l . r"
+        ". d .";
+    margin: auto;
+    align-self: flex-end;
+}
+
+.control__btn {
+    min-width: 10vmin;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border-width: 5px;
+}
+
+.control__btn_up {
+    grid-area: u;
+}
+
+.control__btn_left {
+    grid-area: l;
+}
+
+.control__btn_right {
+    grid-area: r;
+}
+
+.control__btn_down {
+    grid-area: d;
+}
