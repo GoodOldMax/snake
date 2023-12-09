@@ -5,7 +5,7 @@ class Game {
     _options = {
         width: 10,
         height: 10,
-        speed: 500,
+        interval: 500,
         initialAppleCount: 2,
     };
 
@@ -31,18 +31,7 @@ class Game {
         this._generateApples(this._options.initialAppleCount);
         this._bindKeys();
         this._field.draw();
-        this._intervalId = setInterval(() => {
-            const eaten = this._snake.move()
-            if (Apple.prototype.consistsOf(eaten)) {
-                // Съели яблоко, это хорошо
-                this._generateApples(1);
-                this._setCurrentScore(this._currentScore + 1);
-            } else if (Snake.prototype.consistsOf(eaten) || eaten === undefined) {
-                // Съели часть себя, игра окончена
-                this.over();
-            }
-            this._field.draw();
-        }, this._options.speed);
+        this._intervalId = this._startInterval();
     }
 
     over() {
@@ -77,6 +66,28 @@ class Game {
     _setCurrentScore(value) {
         this._currentScore = value;
         this._currentScoreElement.innerHTML = value;
+    }
+
+    _setSpeed(value) {
+        this._options.interval = value;
+        clearInterval(this._intervalId);
+        this._intervalId = this._startInterval();
+    }
+
+    _startInterval() {
+        return setInterval(() => {
+            const eaten = this._snake.move()
+            if (Apple.prototype.consistsOf(eaten)) {
+                // Съели яблоко, это хорошо
+                this._generateApples(1);
+                this._setSpeed(this._options.interval - 10);
+                this._setCurrentScore(this._currentScore + 1);
+            } else if (Snake.prototype.consistsOf(eaten) || eaten === undefined) {
+                // Съели часть себя, игра окончена
+                this.over();
+            }
+            this._field.draw();
+        }, this._options.interval);
     }
 
     _updateBestScore() {
