@@ -37,7 +37,7 @@ class Game {
                 // Съели яблоко, это хорошо
                 this._generateApples(1);
                 this._setCurrentScore(this._currentScore + 1);
-            } else if (Snake.prototype.consistsOf(eaten)) {
+            } else if (Snake.prototype.consistsOf(eaten) || eaten === undefined) {
                 // Съели часть себя, игра окончена
                 this.over();
             }
@@ -142,6 +142,9 @@ class Field {
     }
 
     getCell(x, y) {
+        if (this._cells[x] === undefined) {
+            return undefined;
+        }
         return this._cells[x][y];
     }
 
@@ -238,16 +241,8 @@ class Snake {
 
         // вычисляем координаты клетки, на которую наступаем
         const nextHeadCoordinates = {
-            x: (currentHeadCoordinates.x + this._direction.dx) % this._field._cells.length,
-            y: (currentHeadCoordinates.y + this._direction.dy) % this._field._cells[0].length,
-        }
-
-        if (nextHeadCoordinates.x < 0) {
-            nextHeadCoordinates.x = this._field._cells.length - 1;
-        }
-
-        if (nextHeadCoordinates.y < 0) {
-            nextHeadCoordinates.y = this._field._cells[0].length - 1;
+            x: currentHeadCoordinates.x + this._direction.dx,
+            y: currentHeadCoordinates.y + this._direction.dy,
         }
 
         // проверяем что мы нашли на следующей клетке по текущему направлению движения
@@ -262,12 +257,14 @@ class Snake {
             this._field.resetCell(previousTailCoordinates.x, previousTailCoordinates.y);
         }
 
-        // создаем новую голову по текущему направлению движения
-        const newHead = new SnakeCell();
-        this._field.setCell(
-            nextHeadCoordinates.x, nextHeadCoordinates.y, newHead
-        );
-        this._parts.unshift(newHead);
+        if (eaten !== undefined) {
+            // создаем новую голову по текущему направлению движения
+            const newHead = new SnakeCell();
+            this._field.setCell(
+                nextHeadCoordinates.x, nextHeadCoordinates.y, newHead
+            );
+            this._parts.unshift(newHead);
+        }
 
         // возвращаем то, что "съели" в новой клетке
         return eaten;
